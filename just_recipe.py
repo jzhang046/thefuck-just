@@ -14,8 +14,11 @@ def match(command):
 
 
 def get_new_command(command):
-    matcher = re.search('error: Justfile does not contain recipe `(?:[^`]+)`.\\nDid you mean `(.+)`\\?', command.output)
-    return ["just " + matcher.group(1)]
+    matcher = re.search('error: Justfile does not contain recipe `([^`]+)`.\\nDid you mean `([^`].+)`\\?', command.output)
+    return [
+        command.script.replace(matcher.group(1), matcher.group(2)),
+        "just --list"
+    ]
 
 enabled_by_default = just_available()
 
